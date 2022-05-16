@@ -158,7 +158,8 @@ class Ui_Game(object):
 
     def retranslateUi(self, Game):
         _translate = QtCore.QCoreApplication.translate
-        Game.setWindowTitle(_translate("Game", "Juego AGI"))
+        Game.setWindowTitle(_translate("Game", "  ¡Intenta adivinar el numero!"))
+        Game.setWindowIcon(QtGui.QIcon('./assets/rocket.png'))
         self.text2.setText(_translate("Game", "Ingresa un número:"))
         self.text1.setText(_translate("Game", "Intentos realizados:"))
         self.btn1.setText(_translate("Game", "Probar numero"))
@@ -176,24 +177,29 @@ class Ui_Game(object):
         self.btn2.clicked.connect(self.reset)
 
     def playGame(self):
-        try:
-            jugada = func.adivinarNumero(self.numeroAleatorio, self.txt2.text())
-            if int(self.txt1.text()) == 5:
-                self.plainTextEdit.setPlainText(
-                    "Perdiste, llegaste al numero maximo de intentos permitidos")
-            else:
-                intentos = str(int(self.txt1.text()) + 1)
-                self.txt1.setText(intentos)
 
-                if jugada[0]:
-                    self.plainTextEdit.setPlainText(jugada[1])
+        try:
+            if int(self.txt2.text()) >= 100 and int(self.txt2.text()) < 1000:
+                jugada = func.adivinarNumero(self.numeroAleatorio, self.txt2.text())
+                if int(self.txt1.text()) == 5:
+                    self.plainTextEdit.setPlainText(
+                        "Perdiste, llegaste al numero maximo de intentos permitidos")
                 else:
-                    self.plainTextEdit.setPlainText(jugada[1])
-                    self.txt2.setText("")
-                    self.txt2.setFocus()
+                    intentos = str(int(self.txt1.text()) + 1)
+                    self.txt1.setText(intentos)
+
+                    if jugada[0]:
+                        self.plainTextEdit.setPlainText(jugada[1])
+                    else:
+                        self.plainTextEdit.setPlainText(jugada[1])
+                        self.txt2.setText("")
+                        self.txt2.setFocus()
+            else:
+                self.plainTextEdit.setPlainText("El numero ingresado debe de tener no mas de 3 digitos por ejemplo: 123")
         except:
             self.plainTextEdit.setPlainText(
-                "Parece que ingresaste mal el numero")
+                "Parece que ingresaste un texto en lugar de un numero o el campo esta vacio ")
+       
 
     def reset(self):
         self.txt1.setText("0")
