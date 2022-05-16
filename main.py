@@ -14,6 +14,8 @@ import funciones.funciones as func
 
 
 class Ui_Game(object):
+    numeroAleatorio = func.generadorNumero()
+
     def setupUi(self, Game):
         Game.setObjectName("Game")
         Game.resize(613, 157)
@@ -160,7 +162,7 @@ class Ui_Game(object):
         self.text2.setText(_translate("Game", "Ingresa un número:"))
         self.text1.setText(_translate("Game", "Intentos realizados:"))
         self.btn1.setText(_translate("Game", "Probar numero"))
-        self.btn2.setText(_translate("Game", "Reiniciar intentos"))
+        self.btn2.setText(_translate("Game", "Reiniciar Juego"))
         self.plainTextEdit.setToolTip(_translate(
             "Game", "<html><head/><body><p><br/></p></body></html>"))
         self.cmb1.setItemText(0, _translate("Game", "Facil"))
@@ -174,21 +176,19 @@ class Ui_Game(object):
         self.btn2.clicked.connect(self.reset)
 
     def playGame(self):
-        numeroAleatorio = func.generadorNumero()
-
         try:
-            jugada = func.adivinarNumero(numeroAleatorio, self.txt2.text())
+            jugada = func.adivinarNumero(self.numeroAleatorio, self.txt2.text())
             if int(self.txt1.text()) == 5:
                 self.plainTextEdit.setPlainText(
                     "Perdiste, llegaste al numero maximo de intentos permitidos")
             else:
                 intentos = str(int(self.txt1.text()) + 1)
                 self.txt1.setText(intentos)
-                if jugada:
-                    self.plainTextEdit.setPlainText("Felicidades ganaste")
+
+                if jugada[0]:
+                    self.plainTextEdit.setPlainText(jugada[1])
                 else:
-                    self.plainTextEdit.setPlainText(
-                        "Lamento decirlo pero no es ese el numero")
+                    self.plainTextEdit.setPlainText(jugada[1])
                     self.txt2.setText("")
                     self.txt2.setFocus()
         except:
@@ -200,6 +200,7 @@ class Ui_Game(object):
         self.txt2.setText("")
         self.plainTextEdit.setPlainText("")
         self.txt2.setFocus()
+        self.numeroAleatorio = func.generadorNumero()
 
 
 if __name__ == "__main__":
