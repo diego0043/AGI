@@ -121,7 +121,7 @@ class Ui_Game(object):
                                 "")
         self.btn2.setObjectName("btn2")
         self.plainTextEdit = QtWidgets.QPlainTextEdit(self.centralwidget)
-        self.plainTextEdit.setGeometry(QtCore.QRect(170, 20, 221, 111))
+        self.plainTextEdit.setGeometry(QtCore.QRect(170, 10, 221, 130))
         self.plainTextEdit.setStyleSheet(" border-width: 1px;\n"
                                          " border-style: solid;\n"
                                          "border-color: rgb(218, 196, 255);\n"
@@ -158,10 +158,11 @@ class Ui_Game(object):
 
     def retranslateUi(self, Game):
         _translate = QtCore.QCoreApplication.translate
-        Game.setWindowTitle(_translate("Game", "  ¡Intenta adivinar el numero!"))
+        Game.setWindowTitle(_translate(
+            "Game", "  ¡Intenta adivinar el numero!"))
         Game.setWindowIcon(QtGui.QIcon('./assets/rocket.png'))
         self.text2.setText(_translate("Game", "Ingresa un número:"))
-        self.text1.setText(_translate("Game", "Intentos realizados:"))
+        self.text1.setText(_translate("Game", "Intentos disponibles:"))
         self.btn1.setText(_translate("Game", "Probar numero"))
         self.btn2.setText(_translate("Game", "Reiniciar Juego"))
         self.plainTextEdit.setToolTip(_translate(
@@ -171,38 +172,43 @@ class Ui_Game(object):
         self.cmb1.setItemText(2, _translate("Game", "Dificil"))
         self.cmb1.setItemText(3, _translate("Game", "Demencial"))
         self.text3.setText(_translate("Game", "Nivel de dificultad:"))
-        self.txt1.setText(_translate("Game", "0"))
+        self.txt1.setText(_translate("Game", "5"))
 
         self.btn1.clicked.connect(self.playGame)
         self.btn2.clicked.connect(self.reset)
 
     def playGame(self):
-
         try:
-            if int(self.txt2.text()) >= 100 and int(self.txt2.text()) < 1000:
-                jugada = func.adivinarNumero(self.numeroAleatorio, self.txt2.text())
-                if int(self.txt1.text()) == 5:
-                    self.plainTextEdit.setPlainText(
-                        "Perdiste, llegaste al numero maximo de intentos permitidos")
-                else:
-                    intentos = str(int(self.txt1.text()) + 1)
-                    self.txt1.setText(intentos)
-
-                    if jugada[0]:
-                        self.plainTextEdit.setPlainText(jugada[1])
-                    else:
-                        self.plainTextEdit.setPlainText(jugada[1])
-                        self.txt2.setText("")
+            intentos = int(self.txt1.text())
+            if intentos != 0:
+                intento = func.adivinarNumero(
+                    self.numeroAleatorio, self.txt2.text())
+                if intento[0]:
+                    intentos = intentos - 1
+                    self.txt1.setText(str(intentos))
+                    if(intentos != 0):
+                        self.plainTextEdit.setPlainText(
+                            intento[1])
+                    elif(intentos == 0):
+                        self.plainTextEdit.setPlainText(
+                            "Perdiste :( , suerte en la proxima")
                         self.txt2.setFocus()
-            else:
-                self.plainTextEdit.setPlainText("El numero ingresado debe de tener no mas de 3 digitos por ejemplo: 123")
+                elif intento[0] == False:
+                    intentos = intentos - 1
+                    self.txt1.setText(str(intentos))
+                    if(intentos != 0):
+                        self.plainTextEdit.setPlainText(
+                            intento[1])
+                    elif(intentos == 0):
+                        self.plainTextEdit.setPlainText(
+                            "Perdiste :( , suerte en la proxima")
+                        self.txt2.setFocus()
         except:
             self.plainTextEdit.setPlainText(
-                "Parece que ingresaste un texto en lugar de un numero o el campo esta vacio ")
-       
+                            "Parece que algo salio mal al intentar con ese numero ")
 
     def reset(self):
-        self.txt1.setText("0")
+        self.txt1.setText("5")
         self.txt2.setText("")
         self.plainTextEdit.setPlainText("")
         self.txt2.setFocus()
